@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	s := "中国人民共和国"		// UTF-8
+	s := "中国人民共和国" // UTF-8
 
 	//for i,ch := range []byte(s) {	// 将字符对应的 utf8 对应编码输出
 	/*for i,ch := range s {	// 将 utf8 转出成 unicode

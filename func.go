@@ -12,24 +12,24 @@ import (
 @test 返回多个值
 @q 商
 @r 余数
- */
-func div(a, b int) (q, r int)  {
-	return a / b, a %b
+*/
+func div(a, b int) (q, r int) {
+	return a / b, a % b
 }
 
 func apply(op func(int, int) int, a, b int) int {
 	pointer := reflect.ValueOf(op).Pointer()
 	name := runtime.FuncForPC(pointer).Name()
-	fmt.Printf("Calling function %d with args "+ "(%d, %d)", name, a, b)
+	fmt.Printf("Calling function %d with args "+"(%d, %d)", name, a, b)
 	return op(a, b)
 }
 func pow(a, b int) int {
-	return int(math.Pow(float64(a), float64(b)));
+	return int(math.Pow(float64(a), float64(b)))
 }
 
 func sum(numbers ...int) int {
 	s := 0
-	for i := range numbers  {
+	for i := range numbers {
 		s += numbers[i]
 	}
 
@@ -44,8 +44,8 @@ func main() {
 	println(apply(
 		// 匿名函数
 		func(a int, b int) int {
-			return int(math.Pow(float64(a), float64(b)));
+			return int(math.Pow(float64(a), float64(b)))
 		}, 3, 4))
 
-	println(sum(1, 2, 3, 4,5))
+	println(sum(1, 2, 3, 4, 5))
 }
