@@ -1,10 +1,13 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"github.com/gpmgo/gopm/modules/log"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func server(w http.ResponseWriter,
@@ -33,6 +36,15 @@ type appHandler func(w http.ResponseWriter, r *http.Request) error
  */
 func errWrapper(handler appHandler) func(http.ResponseWriter, *http.Request)  {
 	return func(writer http.ResponseWriter, request *http.Request) {
+		defer func() {
+			r := recover()
+			fmt.Printf("Panic: %v", r)
+
+			http.Error(writer,
+				http.StatusText(http.StatusInternalServerError),
+				http.StatusInternalServerError)
+
+		}()
 		err := handler(writer, request)
 		if err != nil {
 			log.Warn("Error handling request； %s", err.Error())
@@ -54,9 +66,16 @@ func errWrapper(handler appHandler) func(http.ResponseWriter, *http.Request)  {
 		}
 	}
 }
+
+const prefix  = "/list"
+
 func hello (w http.ResponseWriter,
 	r *http.Request) error {
-	path := r.URL.Path[len("/list/"):]
+
+	if strings.Index(r.URL.Path, prefix) !=0 {
+		return  errors.New("path must start with "+ prefix)
+	}
+	path := r.URL.Path[len(prefix):]
 	file, err := os.Open(path)
 
 	//log.Warn("%s", path)
