@@ -9,9 +9,14 @@ import (
 	"golang.org/x/text/transform"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
+// 设置请求间隔
+var rateLimiter = time.Tick(100 * time.Millisecond)
+
 func Fetch(url string) ([]byte, error) {
+	<-rateLimiter
 	resp, err := http.Get(url)
 	/*resp, err := http.NewRequest(
 		http.MethodGet,
@@ -48,6 +53,7 @@ func Fetch(url string) ([]byte, error) {
 }
 
 func FetchUrl(url string) ([]byte, error) {
+	<-rateLimiter
 	request, err := http.NewRequest(
 		http.MethodGet,
 		url,
